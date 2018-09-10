@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 鲜花订购与管理系统</title>
+    <environment include="Development">
+        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
+        <link href="~/css/site.css" rel="stylesheet" />
+        <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    </environment>
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-nav">
+            <ul>
+                <li><a href="#"><i class="fa fa-fort-awesome" aria-hidden="true"></i>首页</a></li>
+                |
+                <li>欢迎来到花之家!</li>
+                
+                <li><a href="#">登录</a></li>
+                |
+                <li><a href="#">注册</a></li>
+                |
+                <li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;购物车</a></li>
+            </ul>
+        </div>
+        <div class="top">
+            <div class="logo">
+                <img src="~/images/logo.png" width="68" height="68" />花之家
+            </div>
+
+            <div class="query">
+                <input type="text" name="inputframe" placeholder="请输入你要搜索的内容" />
+                <input type="button" name="inputbutton" value="搜索" />
+            </div>
+
+            <div class="information">
+                <div class="phone"><a href="#"><i class="fa fa-headphones fa-2x" aria-hidden="true"></i>在线客服</a></div>
+                &nbsp; |
+                <div class="phone"><i class="fa fa-volume-control-phone fa-2x" aria-hidden="true"></i>110-120-1120</div>
+            </div>
+        </div>
+
+        <div class="container body-content">
+            @RenderBody()
+
+            <footer>
+                <div class="footer-nav">
+                    <div class="nav">
+                        <div class="nav-left">
+                            <ul>
+                                <li class="li-title">客户服务</li>
+                                <li><a href="#">隐私条款</a></li>
+                                <li><a href="#">公司简介</a></li>
+                                <li><a href="#">安全条款</a></li>
+                                <li><a href="#">联系方式</a></li>
+                                <li><a href="#">服务声明</a></li>
+                            </ul>
+                            <ul>
+                                <li class="li-title">购物指南</li>
+                                <li><a href="#">绿植寓意</a></li>
+                                <li><a href="#">鲜花支数寓意</a></li>
+                                <li><a href="#">购物须知</a></li>
+                                <li><a href="#">送花礼仪</a></li>
+                                <li><a href="#">如何购买</a></li>
+                            </ul>
+                            <ul>
+                                <li class="li-title">支付方式</li>
+                                <li><a href="#">支付方式</a></li>
+                                <li><a href="#">银行转账</a></li>
+                                <li><a href="#">在线补款</a></li>
+                            </ul>
+                            <ul>
+                                <li class="li-title">配送信息</li>
+                                <li><a href="#">关于配送</a></li>
+                                <li><a href="#">定时配送</a></li>
+                                <li><a href="#">配送说明</a></li>
+                                <li><a href="#">发票说明</a></li>
+                                <li><a href="#">配送范围及费用</a></li>
+                            </ul>
+                            <ul>
+                                <li class="li-title">售后服务</li>
+                                <li><a href="#">投诉建议</a></li>
+                                <li><a href="#">订单查询</a></li>
+                                <li><a href="#">取消订单</a></li>
+                            </ul>
+                        </div>
+                        <div class="nav-right">
+                            <ul>
+                                <li>本地订花热线</li>
+                                <li>770-880-1314</li>
+                                <li>服务时间：24小时全天为您服务</li>
+                                <li>客服工作时间：9:00-21:00</li>
+                                <li>花之家欢迎您的来电！</li>
+                                <li>蜀ICP备15011281号</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="footer-bottom"></div>*@
+            </footer>
+        </div>
+    </div>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
