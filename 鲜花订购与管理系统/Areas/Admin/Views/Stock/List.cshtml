@@ -1,0 +1,22 @@
+﻿<table id="stocktable" lay-filter="stocktablefilter"></table>
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#stocktable'
+                , url: '/Admin/Stock/GetDataList' //数据接口
+                , cols: [[ //表头
+                    { field: 'flowerId', title: '花ID' }
+                    , { field: 'flowerName', title: '花名' }
+                    ,{ field: 'stockCount', title: '库存' }
+                    , { field: 'purchasePrice', title: '进货价' }
+                    , { field: 'sellPrice', title: '售价' }
+                ]]
+                , page: true
+            });
+        });
+    </script>
+}

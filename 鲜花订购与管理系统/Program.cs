@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace 鲜花订购与管理系统
+namespace FlowerHouse
 {
     public class Program
     {

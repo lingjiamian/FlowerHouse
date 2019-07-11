@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>花之家后台管理</title>
+    <link rel="stylesheet" href="~/layui/css/layui.css">
+    @await RenderSectionAsync("Style", false)
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">花之家后台管理</div>
+            <div class=""></div>
+
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        @*<img src="http://t.cn/RCzsdCq" class="layui-nav-img">*@
+                        <span>@User.Identity.Name</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item"><a href="/Home/Index">首页</a></li>
+                <li class="layui-nav-item"><a href="/Account/LogOut">退了</a></li>
+
+                
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">后台管理</a>
+                        <dl class="layui-nav-child">
+                            <dd class="@(ViewBag.leftNav=="Users"?"layui-this":"")"><a href="/Admin/Users/List">用户管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Flower"?"layui-this":"")"><a href="/Admin/Flower/List">花管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Tag"?"layui-this":"")"><a href="/Admin/Tag/List">花标签管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Order"?"layui-this":"")"><a href="/Admin/Order/List">订单管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="OrderItem"?"layui-this":"")"><a href="/Admin/OrderItem/List">订单详情管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Stock"?"layui-this":"")"><a href="/Admin/Stock/List">库存管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Purchase"?"layui-this":"")"><a href="/Admin/Purchase/List">进货管理</a></dd>
+                            <dd class="@(ViewBag.leftNav=="Shipment"?"layui-this":"")"><a href="/Admin/Shipment/List">出货管理</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;">
+                @RenderBody()
+            </div>
+        </div>
+
+
+    </div>
+    <script src="~/layui/layui.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+        });
+    </script>
+    @await RenderSectionAsync("Script", false)
+</body>
+</html>

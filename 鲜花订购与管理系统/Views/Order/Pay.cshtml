@@ -1,0 +1,76 @@
+﻿@model FlowerHouse.Models.Entity.Order
+
+@section Style{
+    <style>
+        .page-main {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .pay-box {
+            background-color: white;
+        }
+
+        .minutes {
+            color: orangered;
+        }
+
+        .pay-col {
+            position: relative;
+        }
+
+        /*.paybtn-box {
+            position: absolute;
+            bottom: -50%;
+            left: 40%;
+        }*/
+    </style>
+}
+
+@if (Model.OrderStatus == FlowerHouse.Models.Entity.OrderStatus.待支付)
+{
+    <div class="page-main">
+        <div class="layui-container ">
+            <div class="pay-box">
+                <div class="layui-row">
+                    <div class="pay-col">
+                        <h2>订单提交成功，去付款咯~</h2>
+                        <p>请在<span class="minutes">@((int)(Model.TimeOutTime.Value - DateTime.Now).TotalMinutes)分钟</span>内完成订单，超时后将取消订单</p>
+                        <p>收货信息：@(Model.HouseUser.UserName)：@(Model.HouseUser.PhoneNumber.Substring(0, 3))***@(Model.HouseUser.PhoneNumber.Substring(7, 4)) @Model.Address</p>
+                        <p class="paybtn-box">
+                            <a id="paybtn" class="layui-btn-danger layui-btn">立即支付</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>订单已完成或关闭</h2>
+}
+
+@section Scripts{
+    <script>
+        layui.use('layer', function () { });
+        $('#paybtn').click(function () {
+            $.ajax({
+                url: '/Order/PayConfirmed',
+                data: 'orderid=' +@Model.OrderId,
+                method: 'post'
+            }).done(function (data) {
+                if (data.status) {
+                    layer.msg(data.msg, { icon: 1 });
+                    setTimeout(() => {
+                        location.href = data.returnUrl
+                    }, 2000);
+                }
+                else {
+                    layer.msg(data.msg, { icon: 5 });
+                }
+            });
+            return false;
+        })
+    </script>
+}

@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewData["Title"] = "Buy";
+}
+@using FlowerHouse.Models.Entity;
+@model ShoppingCart
+@*<h2>Buy</h2>
+    <a href="https://restapi.amap.com/v3/config/district?key=9be91ac44711341369ca529124bcba6e&subdistrict=3">高德地图</a>*@
+@section Style{
+    <style>
+        .page-main {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .checkout-box {
+            background-color: white;
+            padding: 30px;
+        }
+
+        .flower-list {
+            padding: 20px 0;
+        }
+
+        .address-title {
+            margin-bottom: 20px;
+        }
+
+        .f_img {
+            margin-right: 30px;
+        }
+
+        .flower-row {
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .shipment, .invoice {
+            height: 70px;
+            line-height: 70px;
+        }
+
+        .selected-shipment, .selected-invoice {
+            color: orangered;
+        }
+    </style>
+}
+<div class="layui-bg-gray page-main">
+    <div class="layui-container checkout-box layui-form">
+        <h2 class="address-title">确认地址</h2>
+        <div class="layui-form-item">
+            <div id="cat_ids1"></div>
+        </div>
+        <div class="layui-form-item">
+            <input class="layui-input" id="addressdetail" name="addressdetail" autocomplete="off" placeholder="在此输入详细地址" style="width:590px;" />
+        </div>
+        <h2>商品详情</h2>
+        <hr class="layui-bg-gray" />
+        <div class="flower-list">
+            @foreach (var cartItem in Model.CartItems.Where(ci => ci.IsChecked))
+            {
+                <div class="layui-row flower-row">
+                    <div class="title layui-col-md6"><img width="30" height="30" class="f_img" src="@cartItem.Flower.FlowerImg" />@cartItem.Flower.FlowerName</div>
+                    <div class="countprice layui-col-md3">@cartItem.Flower.Stock.SellPrice 元X @cartItem.Count</div>
+                    <div class="total layui-col-md3" style="text-align:center;color:orangered">@(cartItem.Count * cartItem.Flower.Stock.SellPrice)元</div>
+                </div>
+            }
+        </div>
+        <hr class="layui-bg-gray" />
+        <div class="layui-row shipment">
+            <div class="layui-col-md3"><h2>配送方式</h2></div>
+            <div class="layui-col-md1 selected-shipment">包邮</div>
+            <div class="layui-col-md1 layui-col-md-offset6"></div>
+        </div>
+        <hr class="layui-bg-gray" />
+        <div class="layui-row invoice">
+            <div class="layui-col-md3"><h2>发票</h2></div>
+            <div class="layui-col-md1 selected-invoice">电子发票</div>
+            <div class="layui-col-md1 layui-col-md-offset6"></div>
+        </div>
+        <div class="layui-row checkout-bar">
+            <button class="layui-btn-danger layui-btn layui-btn-lg" lay-filter="checkout" lay-submit style="right:10px;float:right;">生成订单</button>
+        </div>
+    </div>
+</div>
+
+<div>
+
+</div>
+@section Scripts{
+    <script>
+        layui.config({
+            base: '/layui-select-ext'
+        }).extend({
+            selectN: './layui_extends/selectN',
+            selectM: './layui_extends/selectM',
+        }).use(['layer', 'form', 'jquery', 'selectN'], function () {
+            $ = layui.jquery;
+            var form = layui.form
+                , selectN = layui.selectN
+
+            //无限级分类-基本配置
+            var catIns1 = selectN({
+                //元素容器【必填】
+                elem: '#cat_ids1'
+                , search: [false, true]
+                //候选数据【必填】
+                , data: '/api/Address/GetShengshi'
+                , field: { idName: 'id', titleName: 'name', childName: 'childList' }
+            });
+
+            form.on('submit(checkout)', function () {
+                let address = '';
+                for (let i = 0; i < catIns1.names.length; i++) {
+                    address += catIns1.names[i];
+                }
+                let addressdetail = $('#addressdetail').val();
+                address += addressdetail;
+                if (address == '请选择' || addressdetail == '') {
+                    layer.msg('请输入正确地址', { icon: 5 });
+                    return;
+                }
+                $.ajax({
+                    url: '/Order/BuyConfirmed',
+                    data: 'address=' + address,
+                    method: 'post'
+                }).done(function (data) {
+                    if (data.status) {
+                        window.location.href = data.returnUrl;
+                    }
+                    else {
+                        layer.msg("下单失败");
+                    }
+                });
+            })
+        });
+
+
+    </script>
+
+}

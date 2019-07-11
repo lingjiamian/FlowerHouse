@@ -1,0 +1,122 @@
+﻿@using FlowerHouse.Models.Entity;
+@model List<Flower>
+@{
+    ViewData["Title"] = "List";
+}
+<style>
+    .flowers-list {
+        padding: 30px 0;
+    }
+
+    .flowers-item {
+        position: relative;
+        height: 300px;
+        background-color: white;
+        padding-top: 45px;
+        transition: box-shadow .5s linear;
+    }
+
+        .flowers-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+    .flowers-item-img {
+        margin: 0 auto 15px;
+        display: flex;
+    }
+
+    .flowers-item .title {
+        text-align: center;
+        color: black;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .flowers-item .price {
+        text-align: center;
+        color: orange;
+        font-size: 14px;
+    }
+
+    /*收藏和查看详情页小图标的样式*/
+
+    .flowers-item .action span {
+        transition: opacity .2s linear;
+        opacity: 0;
+        font-size: 12px;
+    }
+
+    .flowers-item .action i {
+        font-size: 18px;
+    }
+
+    .flowers-item .action .btn-like {
+        left: 20px;
+    }
+
+    .flowers-item .action .btn-buy {
+        right: 20px;
+    }
+
+    .flowers-item .action .btn-like, .flowers-item .action .btn-buy {
+        position: absolute;
+        opacity: 0;
+        transition: all .2s linear;
+        top: 10px;
+    }
+
+    .flowers-item:hover .action .btn-like, .flowers-item:hover .action .btn-buy {
+        opacity: 1;
+        color: black;
+    }
+
+    .flowers-item .action .btn-like:hover span, .flowers-item .action .btn-buy:hover span {
+        opacity: 1;
+    }
+
+    .breadcrumbs {
+        padding-top: 20px;
+    }
+</style>
+<div class="breadcrumbs layui-bg-gray">
+    <div class="layui-container">
+        <span class="layui-breadcrumb" lay-separator=">">
+            <a href="/Home/Index">首页</a>
+            <a href="/Flower/List">全部鲜花</a>
+            @if (ViewBag.breadcrumb != null)
+            {
+                <a><cite>@ViewBag.breadcrumb</cite></a>
+            }
+        </span>
+    </div>
+</div>
+<div class="flowers-list layui-bg-gray">
+    <div class="layui-container">
+        <div class="layui-row layui-col-space20">
+            @if(ViewBag.tip != null)
+            {
+                <h2>@ViewBag.tip</h2>
+            }
+            else
+            {
+
+            @foreach (var flower in Model)
+            {
+                <div class="layui-col-md3">
+                    <div class="flowers-item">
+                        <div class="action">
+                            <a class="btn-like" href="/Flower/Like/@flower.FlowerId"><i class="layui-icon layui-icon-star"></i><span>收藏</span></a>
+                            <a class="btn-buy" href="/Flower/Detail/@flower.FlowerId"><span>详情</span><i class="layui-icon layui-icon-cart-simple"></i></a>
+                        </div>
+                        <a href="/Flower/Detail/@flower.FlowerId">
+                           <img width=200 class="flowers-item-img" height=200 src="@flower.FlowerImg" />
+                        </a>
+                        <p class="title">@flower.FlowerName</p>
+                        <p class="price">@(flower.Stock.SellPrice)元</p>
+                    </div>
+                </div>
+            }
+            }
+        </div>
+    </div>
+</div>

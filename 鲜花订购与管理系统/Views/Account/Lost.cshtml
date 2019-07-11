@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Lost";
+}
+<link href="~/css/AccountLost.css" rel="stylesheet" />
+@model string
+<div class="mainbox">
+    @*@{
+            @Html.RenderPartialAsync(Model);
+
+        }*@
+   @await Html.PartialAsync(Model);
+</div>
+

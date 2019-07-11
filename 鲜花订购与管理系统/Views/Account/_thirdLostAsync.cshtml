@@ -1,0 +1,27 @@
+﻿
+
+<div class="thirdCard">
+    <div class="title">找回密码</div>
+    <div class="progress">
+        <div class="step">1.手机验证</div>
+        <div class="step">2.重置密码</div>
+        <div class="step">3.修改成功</div>
+        <div class="transition1"></div>
+        <div class="transition2"></div>
+    </div>
+    <div class="formArea">
+        <div>密码修改成功</div>
+        <div><span id="second">3</span>秒后自动跳转回登录页面...</div>
+    </div>
+</div>
+<script>
+    setTimeout(() => {
+        location.href = "/Account/Login"
+    }, 3000);
+    var second = 2;
+    var jqSecond = $('#second');
+    setInterval(() => {
+        jqSecond.text(second);
+        second--;
+    }, 1000);
+</script>

@@ -1,0 +1,85 @@
+﻿@model FlowerHouse.Models.Entity.Flower
+
+<form class="layui-form" asp-area="Admin" asp-controller="Flower" asp-action="CreateOrUpdate" method="post">
+    <input hidden asp-for="FlowerId" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">花名</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="FlowerName"   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">花材</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="FlowerMaterial"  autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">花语</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="FlowerEmblem" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">配送范围</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="DistributionRange" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">花标签</label>
+        <div class="layui-input-block">
+            @foreach (var tag in ViewBag.TagList as List<FlowerHouse.Models.Entity.Tag>)
+            {
+                <input type="checkbox" value="@tag.TagId" name="tagid" title="@tag.TagName" @(Model == null ? "" : (Model.FlowerTags.Any(ft => ft.TagId == tag.TagId) ? "checked" : ""))>
+            }
+        </div>
+    </div>
+    @*<div class="layui-form-item">
+        <label class="layui-form-label">购买数</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="FlowerBuy" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>*@
+
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">花图片</label>
+        <div class="layui-input-inline">
+            <input id="flowerimgvalue" hidden asp-for="FlowerImg" />
+            <img width="200" height="200" id="flowerimg" src="@(Model == null ? "":Model.FlowerImg)" />
+            <button type="button" class="layui-btn" id="uploadimg">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+@section Script{
+    <script>
+        //Demo
+        layui.use(['form', 'upload'], function () {
+            var form = layui.form;
+            var upload = layui.upload;
+            upload.render({
+                elem: '#uploadimg'
+                , url: '/Admin/Flower/UploadImage'
+                , done: function (res) { //上传后的回调
+                    layer.msg(res.msg);
+                    $('#flowerimg').attr('src', res.src);
+                    $('#flowerimgvalue').val(res.src);
+                }
+            });
+        });
+    </script>
+}

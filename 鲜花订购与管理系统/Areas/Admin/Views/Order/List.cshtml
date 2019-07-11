@@ -1,0 +1,82 @@
+﻿
+<table id="ordertable" lay-filter="ordertablefilter"></table>
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#ordertable'
+                , url: '/Admin/Order/GetDataList' //数据接口
+                , cols: [[ //表头
+                    { field: 'orderId', title: '订单ID', sort: true }
+                    , { field: 'createTime', title: '订单创建' }
+                    , { field: 'timeOutTime', title: '订单过期' }
+                    , { field: 'finishTime', title: '订单完成时间' }
+                    , { field: 'totalPrice', title: '总价' }
+                    , { field: 'address', title: '地址' }
+                    , { field: 'houseUserId', title: '用户ID' }
+                    , { field: 'orderStatus', title: '订单状态' }
+                    , { align: 'center', toolbar: '#opbar', width: 200 }
+                ]]
+                , page: true
+            });
+
+            table.on('tool(ordertablefilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if (layEvent === 'accept') { //删除
+                    layer.confirm('确定接受订单？', function () {
+                        //向服务端发送删除指令
+                        let data = {};
+                        data["orderId"] = obj.data.orderId;
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/Order/AcceptOrder',
+                            data: data
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+                        });
+                        table.reload('ordertable');
+                    });
+                }
+                else if (layEvent === 'refuse') {
+                    layer.confirm('确定拒绝订单？', function () {
+                        //向服务端发送删除指令
+                        let data = {};
+                        data["orderId"] = obj.data.orderId;
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/Order/RefuseOrder',
+                            data: data
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+                        });
+                        table.reload('ordertable');
+                    });
+                }
+                else if (layEvent === 'list') {
+                    location.href = '/Admin/OrderItem/List?orderid=' + obj.data.orderId;
+
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="opbar">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="accept">接受</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="refuse">拒绝</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="list">订单详情</a>
+
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿@model FlowerHouse.Models.Entity.Tag
+<form class="layui-form" asp-area="Admin" asp-controller="Tag" asp-action="CreateOrUpdate" method="post">
+    <input hidden asp-for="TagId" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签名</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="TagName" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签图片</label>
+        <div class="layui-input-inline">
+            <input id="tagimgvalue" hidden asp-for="TagImg" />
+            <img width="200" height="200" id="tagimg" src="@(Model ==null?"": @Model.TagImg)" />
+            <button type="button" class="layui-btn" id="uploadimg">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">导购分类</label>
+        <div class="layui-input-inline">
+            <select asp-for="AssortmentId">
+                <option value="1">鲜花用途</option>
+                <option value="2">鲜花花材</option>
+                <option value="3">鲜花类别</option>
+                <option value="4">永生之花</option>
+                <option value="5">其他礼品</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+@section Script{
+    <script>
+        //Demo
+        layui.use(['form', 'upload'], function () {
+            //var form = layui.form;
+            var upload = layui.upload;  
+            upload.render({
+                elem: '#uploadimg'
+                , url: '/Admin/Tag/UploadImage'
+                , done: function (res) { //上传后的回调
+                    layer.msg(res.msg);
+                    $('#tagimg').attr('src', res.src);
+                    $('#tagimgvalue').val(res.src);
+                }
+            });
+        });
+    </script>
+}

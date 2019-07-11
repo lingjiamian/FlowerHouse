@@ -1,0 +1,84 @@
+﻿@model FlowerHouse.Models.Entity.Shipment
+<form class="layui-form" asp-area="Admin" asp-controller="Shipment" asp-action="CreateOrUpdate" method="post">
+    @Html.ValidationSummary()
+    <div class="layui-form-item">
+        <label class="layui-form-label">花</label>
+        <div id="cat_ids1"></div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">出货数量</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="ShipmentCount" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    @*<div class="layui-form-item">
+            <label class="layui-form-label">订单详情ID</label>
+            <div class="layui-input-inline">
+                <input type="text" asp-for="OrderItemId" autocomplete="off" class="layui-input">
+            </div>
+        </div>*@
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单详情ID</label>
+        <div id="cat_ids2"></div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="shipmentSubmit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+@section Script{
+    <script>
+        layui.config({
+            base: '/layui-select-ext'
+        }).extend({
+            selectN: './layui_extends/selectN',
+        }).use(['layer', 'form', 'jquery', 'selectN'], function () {
+            $ = layui.jquery;
+            var form = layui.form
+                , selectN = layui.selectN
+
+            var catIns1 = selectN({
+                elem: '#cat_ids1'
+                , search: [false, true]
+                , data: '/Admin/Purchase/GetTagFlowerList'
+                , field: { idName: 'id', titleName: 'name', childName: 'childList' }
+            });
+
+            var catIns2 = selectN({
+                elem: '#cat_ids2'
+                , search: [false, true]
+                , data: '/Admin/Shipment/GetNotShipmentOrderItemList'
+                , field: { idName: 'orderItemId', titleName: 'orderItemId' }
+            });
+            form.on('submit(shipmentSubmit)', function (data) {
+                let sendData = {};
+                sendData['flowerId'] = catIns1.values[1];
+                sendData['shipmentCount'] = data.field.ShipmentCount
+                sendData['orderItemId'] = catIns2.values[0];
+                $.ajax({
+                    url: '/Admin/Shipment/ShipmentFlower',
+                    data: sendData,
+                    method: 'post'
+                }).done(function (data) {
+                    if (data.status) {
+                        layer.msg(data.msg, { icon: 1 });
+                        setTimeout(function () {
+                            location.href = data.returnUrl;
+                        }, 1000);
+                    }
+                    else {
+                        layer.msg(data.msg, { icon: 5 });
+                    }
+
+                });
+                return false;
+            })
+        });
+    </script>
+}

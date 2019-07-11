@@ -1,0 +1,25 @@
+﻿<a class="layui-btn" href="/Admin/Purchase/PurchaseOldFlower">进旧花</a>
+<a class="layui-btn" href="/Admin/Purchase/PurchaseNewFlower">进新花</a>
+
+<table id="purchasetable" lay-filter="purchasetablefilter"></table>
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#purchasetable'
+                , url: '/Admin/Purchase/GetDataList' //数据接口
+                , cols: [[ //表头
+                    { field: 'purchaseCount', title: '进货数量' }
+                    , { field: 'purchaseTime', title: '进货时间' }
+                    , { field: 'flowerId', title: '花ID' }
+                    , { field: 'flowerName', title: '花名' }
+                    , { field: 'purchasePrice', title: '进货总价' }
+                ]]
+                , page: true
+            });
+        });
+    </script>
+}

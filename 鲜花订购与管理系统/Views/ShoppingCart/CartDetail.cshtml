@@ -1,0 +1,188 @@
+﻿@using FlowerHouse.Models.Entity
+@model ShoppingCart
+<style>
+    .cart-goods-list {
+        padding: 50px 0;
+    }
+
+    .list-body {
+        background-color: white;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .item-box {
+        height: 150px;
+        line-height: 150px;
+    }
+
+    .cart-bar {
+        background-color: white;
+        height: 50px;
+        line-height: 50px;
+    }
+</style>
+<div class="cart-goods-list layui-bg-gray">
+    @if (Model == null || Model.CartItems.Count == 0)
+    {
+        <h2>购物车为空</h2>
+    }
+    else
+    {
+        <div class="layui-container list-body layui-form">
+            <div class="list-head">
+                <div class="layui-form layui-row">
+                    <div class="layui-col-md1">
+                        <input type="checkbox" title="全选" class="checkbox" id="checkboxall" value="@Model.ShoppingCartId" lay-filter="checkboxall" lay-skin="primary" @(Model.CartItems.All(ci => ci.IsChecked) ? "checked" : "")>
+                    </div>
+                    <div class="layui-col-md3 layui-col-md-offset1">
+                        <p>商品名称</p>
+                    </div>
+                    <div class="layui-col-md1">
+                        <p>单价</p>
+                    </div>
+                    <div class="layui-col-md1 layui-col-md-offset1">
+                        <p>数量</p>
+                    </div>
+                    <div class="layui-col-md1 layui-col-md-offset1">
+                        <p>小计</p>
+                    </div>
+                    <div class="layui-col-md1 ">
+                        <p>操作</p>
+                    </div>
+                </div>
+            </div>
+            @foreach (var cartItem in Model.CartItems)
+            {
+                <div class="layui-row item-box">
+                    <hr class="layui-bg-gray" />
+                    <div class="layui-col-md1">
+                        <input type="checkbox" class="checkbox" lay-skin="primary" value="@cartItem.CartItemId" lay-filter="cartitemcheck" @(cartItem.IsChecked ? "checked" : "")>
+                    </div>
+                    <div class="flower-img layui-col-md1"><img src="@cartItem.Flower.FlowerImg" width="80" height="80" /></div>
+                    <div class="flower-name layui-col-md3">@cartItem.Flower.FlowerName</div>
+                    <div class="layui-col-md1">@cartItem.Flower.Stock.SellPrice</div>
+                    <div class="layui-col-md1 layui-col-md-offset1">@cartItem.Count</div>
+                    <div class="layui-col-md1 layui-col-md-offset1">@(cartItem.Count * cartItem.Flower.Stock.SellPrice)元</div>
+                    <div class="layui-col-md1 "><a href="javascript:void(0);" data-cartitemid="@cartItem.CartItemId" class="removecartitem">移除</a></div>
+                </div>
+            }
+        </div>
+        <div class="cart-bar layui-container" style="margin-top:20px;">
+            <div class="layui-row">
+                <div class="layui-col-md4"><a href="/Flower/List">继续购物</a> | 共<span id="cartcount"> @(Model.CartItems.Count)</span>件商品 已选择<span id="cartitemcount">@(Model.CartItems.Count(ci => ci.IsChecked == true))</span>件</div>
+                <div class="layui-col-md1 layui-col-md-offset5"><p id="totalPrice">共@(Model.TotalPrice)元</div>
+                <div class=" layui-col-md1"><a href="/Order/Buy" class="layui-btn">结算</a></div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        layui.use('form', function () {
+            var form = layui.form;
+
+
+            //全选复选框
+            form.on('checkbox(checkboxall)', function (data) {
+                let checkcartboxlist = $('.checkbox');
+                $.each(checkcartboxlist, function (index, value) {
+                    if (data.elem.checked) {
+                        $(value).prop('checked', true);
+                    }
+                    else {
+                        $(value).prop('checked', false);
+                    }
+                });
+                form.render('checkbox');
+                var senddata = {};
+                senddata['check'] = data.elem.checked;
+                senddata['cartId'] = data.value;
+                $.ajax({
+                    url: '/ShoppingCart/CheckToCart',
+                    data: senddata,
+                    method: 'post'
+                }).done(function (data) {
+                    changeTotalPrice(data.totalPrice);
+                    changeCartItemCount();
+                });
+            });
+
+            //购物车单项复选框
+            form.on('checkbox(cartitemcheck)', function (data) {
+                let checkboxlist = $('.checkbox');
+                let allChecked = true;
+                for (let i = 1; i < checkboxlist.length; i++) {
+                    if (!$(checkboxlist[i]).prop('checked')) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                let checkboxall = $(checkboxlist[0]);
+                if (allChecked) {
+                    checkboxall.prop('checked', true);
+                }
+                else {
+                    checkboxall.prop('checked', false);
+                }
+                form.render('checkbox');
+                var senddata = {};
+                senddata['check'] = data.elem.checked;
+                senddata['cartItemId'] = data.value;
+                $.ajax({
+                    url: '/ShoppingCart/CheckToCart',
+                    data: senddata,
+                    method: 'post'
+                }).done(function (data) {
+                    changeTotalPrice(data.totalPrice);
+                    changeCartItemCount();
+                });
+            });
+        });
+
+        //移除按钮
+        $('.removecartitem').click(function () {
+            $.ajax({
+                url: '/ShoppingCart/RemoveCartItem',
+                data: 'cartitemid=' + $(this).attr('data-cartitemid'),
+                method: 'post'
+            }).done(function (data) {
+                if (data.status) {
+                    layer.msg(data.msg, { icon: 1 });
+                    changeTotalPrice(data.totalprice);
+                    changeCartItemCount();
+                    changeCartCount(data.cartcount);
+                }
+                else {
+                    layer.msg(data.msg, { icon: 5 });
+                }
+            });
+            $(this).parent().parent().remove();
+        });
+
+
+
+        //改变已选择购物项的数量
+        function changeCartItemCount() {
+            let count = 0;
+            let checkboxlist = $('.checkbox');
+            for (let i = 1; i < checkboxlist.length; i++) {
+                if ($(checkboxlist[i]).prop('checked')) {
+                    count++;
+                }
+            }
+            $('#cartitemcount').text(count);
+        }
+
+        //改变购物车总价
+        function changeTotalPrice(price) {
+            $('#totalPrice').text(price + '元');
+        }
+
+        //改变购物项的总数量
+        function changeCartCount(count) {
+            $('#cartcount').text(count);
+        }
+    </script>
+}

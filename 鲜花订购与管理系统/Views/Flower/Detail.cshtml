@@ -1,0 +1,96 @@
+﻿@using FlowerHouse.Models.Entity;
+@model Flower
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    .flower-box {
+        padding: 50px 0;
+    }
+
+    .flower-name {
+        color: #333;
+        font-size: 28px;
+        font-weight: bold;
+        line-height: 38px;
+    }
+
+    .flower-material, .flower-emblem, .flower-count {
+        color: #616161;
+        font-size: 14px;
+        line-height: 23px;
+    }
+
+    .flower-price {
+        color: orange;
+    }
+
+    .price {
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    .flower-detail-info p {
+        margin: 20px 0;
+    }
+
+    .flower-detail-info .shouhou {
+        color: gray;
+    }
+</style>
+<div class="breacrumb layui-bg-gray">
+    <div class="layui-container">
+        <span class="layui-breadcrumb">
+            <a href="/Home/Index">首页</a>
+            <a href="/Flower/List">全部鲜花</a>
+            <a><cite>@Model.FlowerName</cite></a>
+        </span>
+    </div>
+</div>
+<div class="flower-box layui-container">
+    <div class="layui-row">
+
+        <div class="flower-picture layui-col-md6 layui-col-md-offset1">
+            <img width="492" height="492" src="@Model.FlowerImg" />
+        </div>
+        <div class="flower-detail-info layui-col-md5">
+            <p class="flower-name">@Model.FlowerName</p>
+            <p class="flower-material">花材：@Model.FlowerMaterial</p>
+            <hr class="layui-bg-gray">
+            <p class="flower-emblem">花语：@Model.FlowerEmblem</p>
+            <hr class="layui-bg-gray">
+            <p class="flower-count">库存：@Model.Stock.StockCount</p>
+            <hr class="layui-bg-gray">
+            <p class="flower-price"><b class="price">@(Model.Stock.SellPrice)</b>元</p>
+
+            <p>
+                <button id="addtocart" class="layui-btn layui-btn-lg layui-btn-warm @(Model.Stock.StockCount<=0?"layui-btn-disabled":"")"  @(Model.Stock.StockCount<=0?"disabled":"") data-flowerId="@Model.FlowerId"><i class="layui-icon layui-icon-cart"></i>加入购物车</button>
+            </p>
+            <p class="shouhou"><span><i class="layui-icon layui-icon-ok-circle"></i>七无理由退货</span><span><i class="layui-icon layui-icon-ok-circle"></i>15天质量问题换货</span></p>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        layui.use('layer', function () { });
+        $('#addtocart').click(function () {
+            //console.log('fuck');
+            $.ajax({
+                url: '/ShoppingCart/AddToCart',
+                data: 'flowerId=' + $(this).attr('data-flowerId'),
+                method: 'post'
+            }).done(function (data) {
+                if (data.status) {
+                    layer.msg(data.msg, { icon: 1 });
+                }
+                else {
+                    layer.msg(data.msg, { icon: 5 });
+                }
+            });
+            return false;
+        });
+    </script>
+
+}

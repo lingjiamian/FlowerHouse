@@ -1,117 +1,63 @@
-﻿
+﻿@using FlowerHouse.Models.Entity
+@model List<Flower>
 @{
     ViewData["Title"] = "Index";
 }
 
-<link href="~/layui/css/layui.css" rel="stylesheet" />
-<link href="~/css/Home.css" rel="stylesheet" />
-<script src="~/layui/layui.js"></script>
+<link href="~/css/homeIndex.css" rel="stylesheet" />
 
 <div class="middle">
-
-    <div class="tab">
-        <ul>
-            <li>全部商品导购</li>
-            <li>
-                <a href="#" class="title">鲜花用途</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">爱情鲜花</a></dd>
-                    <dd><a href="javascript:;">生日鲜花</a></dd>
-                    <dd><a href="javascript:;">友情鲜花</a></dd>
-                    <dd><a href="javascript:;">祝贺鲜花</a></dd>
-                    <dd><a href="javascript:;">婚庆鲜花</a></dd>
-                    <dd><a href="javascript:;">商务鲜花</a></dd>
-                    <dd><a href="javascript:;">道歉鲜花</a></dd>
-                    <dd><a href="javascript:;">问候长辈</a></dd>
-                    <dd><a href="javascript:;">友情鲜花</a></dd>
-                </dl>
-            </li>
-
-            <li>
-                <a href="#" class="title">鲜花花材</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">康乃馨</a></dd>
-                    <dd><a href="javascript:;">郁金香</a></dd>
-                    <dd><a href="javascript:;">马蹄莲</a></dd>
-                    <dd><a href="javascript:;">县日葵</a></dd>
-                    <dd><a href="javascript:;">玫瑰</a></dd>
-                    <dd><a href="javascript:;">百合</a></dd>
-                    <dd><a href="javascript:;">扶郎</a></dd>
-                </dl>
-            </li>
-            <li>
-                <a href="#" class="title">鲜花类别</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">开业花篮</a></dd>
-                    <dd><a href="javascript:;">桌面花篮</a></dd>
-                    <dd><a href="javascript:;">精品鲜花</a></dd>
-                    <dd><a href="javascript:;">花束</a></dd>
-                    <dd><a href="javascript:;">花盒</a></dd>
-                    <dd><a href="javascript:;">瓶花</a></dd>
-                    <dd><a href="javascript:;">果篮</a></dd>
-                </dl>
-            </li>
-            <li>
-                <a href="#" class="title">永生之花</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">经典花盒</a></dd>
-                    <dd><a href="javascript:;">巨型玫瑰</a></dd>
-                    <dd><a href="javascript:;">薰衣草</a></dd>
-                </dl>
-            </li>
-            <li>
-                <a href="#" class="title">其他礼品</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">香薰系列</a></dd>
-                    <dd><a href="javascript:;">音乐睡枕</a></dd>
-                    <dd><a href="javascript:;">水晶内雕</a></dd>
-                    <dd><a href="javascript:;">创意礼品</a></dd>
-                    <dd><a href="javascript:;">盆栽花卉</a></dd>
-                    <dd><a href="javascript:;">绿色植物</a></dd>
-                    <dd><a href="javascript:;">音乐盒</a></dd>
-                    <dd><a href="javascript:;">保鲜花</a></dd>
-                </dl>
-            </li>
-        </ul>
-    </div>
+    @*异步调用导购组件*@
+    @await Component.InvokeAsync("ShopNav")
 
     <div class="layui-carousel" id="test10">
         <div carousel-item="" class="ScrollPicture">
+
             <div>
-                <img src="~/images/ScrollPicture/201712289211054.jpg" />
+                <img src="~/images/carouselPicture/c1.jpg" />
             </div>
             <div>
-                <img src="~/images/ScrollPicture/20181815273618.jpg" />
-            </div>
-            <div>
-                <img src="~/images/ScrollPicture/20188281147890.jpg" />
+                <img src="~/images/carouselPicture/c2.jpg" />
+            </div><div>
+                <img src="~/images//carouselPicture//c3.jpg" />
             </div>
         </div>
     </div>
-    
 </div>
 
 <div class="fine">
     <div class="qualityTitle">
         <div class="leftTitle">精品推荐</div>
-        <div class="rightTitle">查看全部 >></div>
+        <div class="rightTitle"><a href="#"> 查看全部 >></a></div>
     </div>
     <div class="product">
         <div class="leftproduct">
-            <div class="leftbox"><a href="#">leftbox</a></div>
+            <div class="leftbox">
+                <a href="#">
+                    @*<img src="~/images/leftboximg.jpg" />*@
+                    <img src="~/images/banner_song.jpg" />
+                    <div class="banner-bottom">
+                        <span>精品推荐专区 >></span>
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="rightproduct">
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
-            <div class="rightbox"><a href="#">rightbox</a></div>
+            @foreach (var flower in Model)
+            {
+
+                <div class="rightbox">
+                    <a href="#">
+                        <img src="@flower.FlowerImg" />
+                        <p class="FlowerName">@flower.FlowerName</p>
+                        <p class="Price">￥：@flower.Stock.SellPrice</p>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
+
 <script>
     layui.use(['carousel', 'form'], function () {
         var carousel = layui.carousel

@@ -1,0 +1,41 @@
+﻿@model FlowerHouse.Models.Entity.OrderItem
+<form class="layui-form" asp-area="Admin" asp-controller="OrderItem" asp-action="CreateOrUpdate" method="post">
+    <input hidden asp-for="OrderItemId" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单详情数量</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="Count" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">花ID</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="FlowerId"  autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单ID</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="OrderId" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" type="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
+        </div>
+    </div>
+</form>
+
+@section Script{
+    <script>
+        //Demo
+        layui.use(['form', 'laydate'], function () {
+            //var form = layui.form;
+            var laydate = layui.laydate;
+        });
+    </script>
+}

@@ -1,0 +1,27 @@
+﻿<a class="layui-btn" href="/Admin/Shipment/CreateOrUpdate">出货</a>
+
+<table id="shipmenttable" lay-filter="shipmenttablefilter"></table>
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#shipmenttable'
+                , url: '/Admin/Shipment/GetDataList' //数据接口
+                , cols: [[ //表头
+                    { field:'shipmentTime', title: '出货时间' }
+                    , { field:'flowerId', title: '花ID' }
+                    , { field:'flowerName', title: '花名' }
+                    , { field:'shipmentCount', title: '出货数量' }
+                    , { field: 'shipmentPrice', title: '进货总额' }
+                    , { field: 'orderItemId', title: '订单详情ID' }
+
+                ]]
+                , page: true
+            });
+        });
+    </script>
+}

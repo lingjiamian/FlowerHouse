@@ -1,0 +1,80 @@
+﻿@model FlowerHouse.Models.Entity.Stock
+<form class="layui-form" method="post">
+    @Html.ValidationSummary()
+    <div class="layui-form-item">
+        <label class="layui-form-label">花</label>
+        <div id="cat_ids1"></div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">进货数量</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="StockCount" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">进货价</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="PurchasePrice" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">售价</label>
+        <div class="layui-input-inline">
+            <input type="text" asp-for="SellPrice" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="purchasesubmit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+@section Script{
+    <script>
+        layui.config({
+            base: '/layui-select-ext'
+        }).extend({
+            selectN: './layui_extends/selectN',
+        }).use(['layer', 'form', 'jquery', 'selectN'], function () {
+            $ = layui.jquery;
+            var form = layui.form
+                , selectN = layui.selectN
+
+
+            var catIns1 = selectN({
+                elem: '#cat_ids1'
+                , search: [false, true]
+                , data: '/Admin/Purchase/GetTagFlowerList?getNewToPurchase=true'
+                , field: { idName: 'id', titleName: 'name', childName: 'childList' }
+            });
+
+            form.on('submit(purchasesubmit)', function (data) {
+                let sendData = {};
+                sendData['flowerId'] = catIns1.values[1];
+                sendData['purchaseCount'] = data.field.StockCount;
+                sendData['sellPrice'] = data.field.SellPrice;
+                sendData['purchasePrice'] = data.field.PurchasePrice;
+                $.ajax({
+                    url: '/Admin/Purchase/PurchaseFlower',
+                    data: sendData,
+                    method: 'post'
+                }).done(function (data) {
+                    if (data.status) {
+                        layer.msg(data.msg, { icon: 1 });
+                        setTimeout(function () {
+                            location.href = data.returnUrl;
+                        }, 1000);
+                    }
+                    else {
+                        layer.msg(data.msg, { icon: 5 });
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}

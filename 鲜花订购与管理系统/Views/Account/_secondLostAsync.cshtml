@@ -1,0 +1,59 @@
+﻿wz
+<div class="secondCard">
+    <div class="title">找回密码</div>
+    <div class="progress">
+        <div class="step">1.手机验证</div>
+        <div class="step">2.重置密码</div>
+        <div class="step">3.修改成功</div>
+        <div class="transition1"></div>
+        <div class="transition2"></div>
+    </div>
+    <form class="formArea layui-form">
+        <div class="inputbox">
+            <span>新密码：</span>
+            <input type="password" class="password" name="password" value="" placeholder="请输入您的新密码" />
+        </div>
+        <div class="inputbox">
+            <span>确认密码：</span>
+            <input type="password" class="repassword" name="repassword" value="" placeholder="再次输入新密码" />
+        </div>
+        @*<div class="inputbox">
+            <span>验证码：</span>
+            <input type="text" id="vcode" name="vcode" placeholder=" " />
+            <img id="vcodeimg" src="/Account/GetVcode" style="vertical-align: middle; cursor:pointer" onclick="changeVcode()" />
+        </div>*@
+        <input type="button" class="nextStep" lay-submit lay-filter="nextStep" value="确认更改" />
+    </form>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('submit(nextStep)', function (data) {
+            $.ajax({
+                url: '/Account/LostSecond',
+                method: 'post',
+                data: data.field
+            }).done(function (data) {
+                //等于0则请求失败
+                if (data.status) {
+                    //layer.msg(data.msg, { icon: 5 });
+                    setTimeout(() => location.href = data.returnUrl);
+
+                }
+                else {
+                    layer.msg(data.msg, { icon: 5 });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+@*<script>
+    function changeVcode() {
+        //1、获取验证码图片元素
+        var obj = document.getElementById("vcodeimg");
+        //2、元素的src属性继续指向/Home/GetVcode
+        //注意：因为浏览器是有缓存机制的，所以需要添加一个随机值
+        obj.src = "/Account/GetVcode?" + Math.random();
+    }
+</script>*@

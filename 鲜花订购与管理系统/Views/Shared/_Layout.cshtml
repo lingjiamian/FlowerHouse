@@ -1,41 +1,80 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@using FlowerHouse.Models.Entity;
+@inject SignInManager<HouseUser> SignInManager
+@inject UserManager<HouseUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - 鲜花订购与管理系统</title>
-    <environment include="Development">
-        @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
-        <link href="~/css/site.css" rel="stylesheet" />
-        <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
-    </environment>
+    <title>花之家</title>
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
+    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">*@
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/layui/layui.js"></script>
+    @await RenderSectionAsync("Style", false)
 </head>
 
 <body>
     <div class="main">
         <div class="top-nav">
-            <ul>
-                <li><a href="#"><i class="fa fa-fort-awesome" aria-hidden="true"></i>首页</a></li>
-                |
-                <li>欢迎来到花之家!</li>
-                
-                <li><a href="#">登录</a></li>
-                |
-                <li><a href="#">注册</a></li>
-                |
-                <li><a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;购物车</a></li>
-            </ul>
+            <div class="navbox">
+                <ul class="nav-left">
+                    <li> <i class="fa fa-fort-awesome" aria-hidden="true">@Html.ActionLink("首页", "Index", "Home")</i></li>
+                    |
+                    <li>欢迎来到花之家!</li>
+                </ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var user = await UserManager.GetUserAsync(User);
+                    <ul class="nav-right">
+                        @if (User.HasClaim(c => c.Type == "ManageHouse"))
+                        {
+                            <li><a href="/Admin/Flower/List">管理后台</a></li>
+                        }
+                        <li class="superior">
+                            <a href="#">@user.UserName</a>
+                            <div class="UserInformation">
+                                <ul>
+                                    <li>昵称: @user.UserName</li>
+                                    <li>
+                                        余额: @user.Balance
+                                        <button class="layui-btn" data-method="recharge">充值</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li><a href="/Account/LogOut">退出登录</a></li>
+                        <li><a href="/Order/List">我的订单</a></li>
+
+                        <li><a href="/ShoppingCart/CartDetail"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;购物车</a></li>
+                    </ul>
+                }
+                else
+                {
+
+                    <ul class="nav-right">
+                        <li>@Html.ActionLink("登录", "Login", "Account")</li>
+                        |
+                        <li>@Html.ActionLink("注册", "Login", "Account")</li>
+                    </ul>
+                }
+            </div>
         </div>
         <div class="top">
             <div class="logo">
                 <img src="~/images/logo.png" width="68" height="68" />花之家
             </div>
-
             <div class="query">
-                <input type="text" name="inputframe" placeholder="请输入你要搜索的内容" />
-                <input type="button" name="inputbutton" value="搜索" />
+                <form asp-action="Search" asp-controller="Flower" method="get">
+                    <input type="text" name="inputframe" placeholder="请输入你要搜索的内容" />
+                    <input type="submit" value="搜索" />
+                </form>
             </div>
-
             <div class="information">
                 <div class="phone"><a href="#"><i class="fa fa-headphones fa-2x" aria-hidden="true"></i>在线客服</a></div>
                 &nbsp; |
@@ -45,7 +84,6 @@
 
         <div class="container body-content">
             @RenderBody()
-
             <footer>
                 <div class="footer-nav">
                     <div class="nav">
@@ -99,11 +137,40 @@
                         </div>
                     </div>
                 </div>
-
-                @*<div class="footer-bottom"></div>*@
             </footer>
         </div>
     </div>
+    <script>
+        layui.use('element', function () { });
+
+        layui.use('layer', function () {
+            var $ = layui.jquery, layer = layui.layer;
+
+            //触发事件
+            var active = {
+                recharge: function () {
+                    layer.open({
+                        type: 1
+                        , title: '用户充值'
+                        , content: $('#lai')
+                        , area: ['240px', '200px']
+                        , anim: 1
+                        , resize: false
+                    });
+                }
+            };
+            $('.UserInformation .layui-btn').on('click', function () {
+                var othis = $(this), method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+        });
+    </script>
     @RenderSection("Scripts", required: false)
+    <form asp-action="payment" asp-controller="Account" method="post">
+        <div id="lai" style="display:none">
+            <p>请输入要充值的金额:<input type="text" name="num" value="" /></p>
+            <input type="submit" name="" class="layui-btn" value="确认充值" />
+        </div>
+    </form>
 </body>
 </html>

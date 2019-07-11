@@ -1,0 +1,26 @@
+﻿@using FlowerHouse.Models.Entity;
+@model List<Assortment>
+
+    <div class="tab">
+        <ul>
+            <li>全部商品导购</li>
+
+            @foreach (var assrotment in Model)
+            {
+                <li>
+                    <a href="#" class="title">@assrotment.AssortmentName</a>
+                    <dl class="layui-nav-child">
+                        @foreach (var tag in assrotment.Tags)
+                        {
+                            <dd>
+                                <a href="/Flower/Tag/@tag.TagId">
+                                    <img src="@tag.TagImg" />
+                                    <span>@tag.TagName</span>
+                                </a>
+                            </dd>
+                        }
+                    </dl>
+                </li>
+            }
+        </ul>
+    </div>>

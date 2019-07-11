@@ -1,0 +1,58 @@
+﻿<div class="firstCard">
+    <div class="title">找回密码</div>
+    <div class="progress">
+        <div class="step">1.手机验证</div>
+        <div class="step">2.重置密码</div>
+        <div class="step">3.修改成功</div>
+        <div class="transition1"></div>
+        <div class="transition2"></div>
+    </div>
+    <form class="formArea layui-form">
+        <div class="inputbox">
+            <span>手机号：</span>
+            <input type="text" id="phone" class="phone" name="phone" value="" placeholder="请输入您绑定的手机号" />
+        </div>
+        <div class="inputbox">
+            <span>验证码：</span>
+            <input type="text" class="Verification" name="Verification" />
+            <input type="button" id="Verificationbtn" class="Verificationbtn" value="发送验证码" />
+        </div>
+        <input type="submit" class="nextStep" lay-submit lay-filter="nextStep" value="下一步" />
+    </form>
+</div>
+
+<script src="~/js/common/requestVerifyCode.js"></script>
+<script src="~/js/common/checkUtility.js"></script>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        form.on('submit(nextStep)', function (data) {
+            $.ajax({
+                url: '/Account/LostFirst',
+                method: 'post',
+                data: data.field
+            }).done(function (data) {
+                //等于0则请求失败
+                if (data.status) {
+                    //layer.msg(data.msg, { icon: 5 });
+                    setTimeout(() => location.href = data.returnUrl);
+                }
+                else {
+                    layer.msg(data.msg, { icon: 5 });
+                }
+            });
+               return false;
+        });
+    });
+
+    //请求验证码按钮
+    $('#Verificationbtn').click(function () {
+        var phoneField = $('#phone');
+        if ($.checkPhone(phoneField.val())) {
+            $.requestPhoneCode(phoneField.val(),'/Account/LostRequestCode', $(this));
+        }
+        else {
+            layer.msg('手机号不合法', { icon: 5 });
+        }
+    });
+</script>

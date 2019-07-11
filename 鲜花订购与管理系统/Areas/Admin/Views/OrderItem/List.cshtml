@@ -1,0 +1,59 @@
+﻿<table id="orderitemtable" lay-filter="orderitemtablefilter"></table>
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#orderitemtable'
+                , url: '/Admin/OrderItem/GetDataList' //数据接口
+                , cols: [[ //表头
+                    { field: 'orderItemId', title: '订单详情ID', sort: true }
+                    , { field: 'orderItemStatus', title: '订单详情状态' }
+                    , { field: 'count', title: '数量' }
+                    , { field: 'flowerId', title: '花ID' }
+                    , { field: 'flowerTag', title: '花标签' }
+                    , { field: 'flowerName', title: '花名' }
+                    , { field: 'orderId', title: '订单ID' }
+                    , { field: 'orderTime', title: '订单时间' }
+
+                ]]
+                , page: true
+            });
+
+            table.on('tool(orderitemtablefilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if (layEvent === 'delete') { //删除
+                    layer.confirm('真的删除行么', function () {
+                        //向服务端发送删除指令
+                        let data = {};
+                        data["orderItemId"] = obj.data.orderItemId;
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/Order/DeleteData',
+                            data: data
+                            //删除对应行（tr）的DOM结构，并更新缓存
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                                obj.del();
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+                        });
+                    });
+                }
+                else if (layEvent === 'update') {
+                    location.href = '/Admin/OrderItem/CreateOrUpdate?orderItemId=' + obj.data.orderItemId;
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="opbar">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="update">更改</a>
+    </script>
+}

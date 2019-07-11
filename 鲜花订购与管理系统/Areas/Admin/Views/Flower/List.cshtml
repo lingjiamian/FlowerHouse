@@ -1,0 +1,63 @@
+﻿<a class="layui-btn" href="/Admin/Flower/CreateOrUpdate">增加</a>
+
+<table id="flowertable" lay-filter="flowertablefliter"></table>
+
+
+@section Script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#flowertable'
+                , url: '/Admin/Flower/GetFlowerData' //数据接口
+                , cols: [[ //表头
+                    { field: 'flowerId', title: '花ID', sort: true, edit: 'text' }
+                    , { field: 'flowerName', title: '花名', width: 80, edit: 'text' }
+                    , { field: 'flowerMaterial', title: '花料', edit: 'text' }
+                    , { field: 'flowerEmblem', title: '花语', edit: 'text' }
+                    , { field: 'distributionRange', title: '配送范围', sort: true, edit: 'text' }
+                    , { field: 'flowerBuy', title: '购买数', width: 135, sort: true, edit: 'text' }
+                    //, { field: 'flowerPrice', title: '价格', width: 135, sort: true, edit: 'text' }
+                    //, { width: 150, align: 'center', toolbar: '#opbar', edit: 'text' }
+                ]]
+                ,page:true
+            });
+
+            table.on('tool(flowertablefliter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if (layEvent === 'delete') { //删除
+                    layer.confirm('真的删除行么', function (index) {
+                        //向服务端发送删除指令
+                        let data = {};
+                        data["flowerid"] = obj.data.flowerId;
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/Flower/DeleteData',
+                            data: data
+                            //删除对应行（tr）的DOM结构，并更新缓存
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                                obj.del();
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+
+                        })
+                    });
+                }
+                else if (layEvent === 'update') {
+                    location.href = '/Admin/Flower/CreateOrUpdate?flowerid=' + obj.data.flowerId;
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="opbar">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="update">更改</a>
+
+    </script>
+}

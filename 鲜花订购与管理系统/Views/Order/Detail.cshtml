@@ -1,0 +1,117 @@
+﻿@model FlowerHouse.Models.Entity.Order
+
+@section Style{
+    <style>
+        .order-box {
+            border: 1px solid gray;
+            width: 800px;
+            padding: 20px 30px;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .order-status {
+            color: orangered;
+            font-size: 34px;
+            margin: 20px;
+        }
+
+        .order-detail-box {
+            background-color: white;
+            padding: 20px 30px;
+        }
+
+        .page-main {
+            padding: 50px 0;
+        }
+
+        .order-price-box {
+            position: absolute;
+            right: 10%;
+            top: 20%;
+        }
+
+        .order-price {
+            font-size: 28px;
+            color: black;
+        }
+
+        .order-detail {
+            text-align: center;
+        }
+
+        .my-order-title {
+            padding: 20px 0;
+        }
+    </style>
+}
+<div class="page-main layui-bg-gray">
+    <div class="layui-container order-detail-box">
+        <h2 class="my-order-title">订单详情</h2>
+        <div class="order-detail">
+            <p class="order-status">@Model.OrderStatus</p>
+            <span>@Model.HouseUser.UserName | 下单日期：@Model.CreateTime | 订单号：@Model.OrderId</span>
+            @if (Model.OrderStatus == FlowerHouse.Models.Entity.OrderStatus.待支付)
+            {
+                <p><a class="layui-btn layui-btn-danger" id="paybtn">立即支付</a></p>
+                <script>
+                    layui.use('layer', function () { });
+                    $('#paybtn').click(function () {
+                        $.ajax({
+                            url: '/Order/PayConfirmed',
+                            data: 'orderid=' +@Model.OrderId,
+                            method: 'post'
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                                setTimeout(() => {
+                                    location.href = data.returnUrl
+                                }, 2000);
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+                        });
+                        return false;
+                    });
+                </script>
+            }
+            @if (Model.OrderStatus == FlowerHouse.Models.Entity.OrderStatus.已发货)
+            {
+                <p><a class="layui-btn layui-btn-danger" id="receiveconfirmed">确认收货</a></p>
+                <script>
+                    layui.use('layer', function () { });
+                    $('#receiveconfirmed').click(function () {
+                        $.ajax({
+                            url: '/Order/ReceiveConfirmed',
+                            data: 'orderid=' +@Model.OrderId,
+                            method: 'post'
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                                setTimeout(() => {
+                                    location.href = data.returnUrl
+                                }, 2000);
+                            }
+                            else {
+                                layer.msg('确认失败', { icon: 5 });
+                            }
+                        });
+                        return false;
+                    });
+                </script>
+            }
+            <div class="order-price-box">
+                订单金额：<span class="order-price">@Model.TotalPrice</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        layui.use(['element'], function () {
+        });
+    </script>
+}

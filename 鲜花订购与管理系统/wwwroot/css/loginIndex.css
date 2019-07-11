@@ -1,0 +1,80 @@
+﻿.login-wrapper {
+    display:inline-block;
+    float:left;
+    width: 100%;
+    height: 640px;
+    background-image: url('../images/loginbg.jpg');
+    position:relative;
+}
+    .login-wrapper .loginbox {
+        width: 400px;
+        height: 500px;
+        background-color: rgba(229, 229, 229,0.8);
+        position:absolute;
+        top:10%;
+        right:10%;
+    }
+.layui-tab-title li {
+    display:inline-block;
+    width:50%;
+    margin:0;
+}
+
+.inputbox {
+    width:300px;
+    height:40px;
+    margin:20px auto;    
+}
+    .inputbox i, .inputbox input {
+        float:left;
+    }
+    .inputbox i {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        text-align: center;
+        line-height: 40px;
+        background-color: #ccc;
+        box-sizing: border-box;
+        border: 1px solid #808080;
+        border-right: none;
+        color:gray;
+    }
+    .inputbox input {
+        width: 260px;
+        height: 40px;
+        box-sizing: border-box;
+        border:1px solid #808080;
+        border-left:none;
+    }
+.layui-tab-item a {
+    margin:0 40px;
+    text-align:right;
+    font-size:14px;
+    float:right;
+}
+.layui-tab-item .Loginbtn {
+    display: inline-block;
+    width: 300px;
+    height: 40px;
+    margin: 10px 40px;
+    background-color: orange;
+    color: white;
+    font-size:20px;
+    border:none;
+    border-radius:6px;
+}
+.layui-tab-item #vcode {
+    height: 40px;
+    width: 200px;
+    border: 1px solid #808080;
+    margin-right:10px;
+}
+.layui-tab-item .validate {
+    width: 200px;
+    border: 1px solid #808080;
+}
+.layui-tab-item .validatebtn {
+    width:100px;
+}

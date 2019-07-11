@@ -1,0 +1,86 @@
+﻿<a class="layui-btn" href="/Admin/Users/Create">增加</a>
+
+<table id="usertable" lay-filter="usertable-filter"></table>
+
+@section Script{
+    <script>
+
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#usertable'
+                , url: '/Admin/Users/GetUesrs' //数据接口
+                , cols: [[ //表头
+                    { field: 'id', title: 'ID', sort: true, edit: 'text' }
+                    , { field: 'userName', title: '用户名', width: 80, edit: 'text' }
+                    , { field: 'phoneNumberConfirmed', title: '手机验证', edit: 'text' }
+                    , { field: 'phoneNumber', title: '手机号', edit: 'text' }
+                    /*头像*/
+                    //, { width: 150, align: 'center', toolbar: '#opbar', edit: 'text' }
+                ]]
+                , page: true
+            });
+
+            table.on('edit(usertable-filter)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据
+                let data = {};
+                data['objectId'] = obj.data.objectId;
+                data['key'] = obj.field;
+                data['value'] = obj.value;
+                data['table'] = '_User';
+                $.ajax({
+                    url: '/Admin/Manage/UpdateData',
+                    data: data,
+                    method: 'post'
+                }).done(function (data) {
+                    if (data.status) {
+                        layer.msg(data.msg, { icon: 1 });
+                    }
+                    else {
+                        layer.msg(data.msg, { icon: 5 });
+                    }
+                })
+            });
+
+            table.on('tool(usertable-filter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                if (layEvent === 'delete') { //删除
+                    layer.confirm('真的删除行么', function (index) {
+                        //向服务端发送删除指令
+                        let data = {};
+                        data["table"] = "_User";
+                        data["objectId"] = obj.data.objectId;
+                        $.ajax({
+                            type: 'post',
+                            url: '/Admin/Manage/DeleteData',
+                            data: data
+                            //删除对应行（tr）的DOM结构，并更新缓存
+                        }).done(function (data) {
+                            if (data.status) {
+                                layer.msg(data.msg, { icon: 1 });
+                                obj.del();
+                            }
+                            else {
+                                layer.msg(data.msg, { icon: 5 });
+                            }
+
+                        })
+                    });
+                }
+
+                else if (layEvent === 'update') {
+                    location.href = '/Admin/Users/CreateOrUpdate?userid=' + obj.data.id;
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="opbar">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+        @*<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="update">更改</a>*@
+
+    </script>
+}
