@@ -343,7 +343,7 @@ namespace FlowerHouse.Controllers
             request.AddHeader("X-Bmob-REST-API-Key", "2cfcc9e12f7d0f77b458ee2ddc018452");
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(new { mobilePhoneNumber = phone });
-            return await client.ExecuteTaskAsync(request);
+            return await client.ExecuteAsync(request);
         }
 
         /// <summary>

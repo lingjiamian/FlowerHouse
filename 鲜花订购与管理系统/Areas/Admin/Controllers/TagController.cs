@@ -98,7 +98,7 @@ namespace FlowerHouse.Areas.Admin.Controllers
         }
 
         //上传图片接口
-        public async Task<IActionResult> UploadImage([FromServices] IHostingEnvironment hostingEnvironment, IFormFile file)
+        public async Task<IActionResult> UploadImage([FromServices] IWebHostEnvironment hostingEnvironment, IFormFile file)
         {
             long size = file.Length;
 

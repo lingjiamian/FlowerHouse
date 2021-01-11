@@ -33,7 +33,7 @@ namespace FlowerHouse.Models
 
         private static async Task CreateAdminUserAsync(IServiceProvider serviceProvider)
         {
-            var env = serviceProvider.GetService<IHostingEnvironment>();
+            var env = serviceProvider.GetService<IWebHostEnvironment>();
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -58,7 +58,7 @@ namespace FlowerHouse.Models
             string lingjiamian = configuration["DefaultUsername"];
             string userPwd = configuration["DefaultUserPassword"];
             string[] userid = new string[10];
-            string id = "1832016651";
+            string id = "18320166512";
             Random ran = new Random();
             for (int i = 0; i < 10; i++)
             {
