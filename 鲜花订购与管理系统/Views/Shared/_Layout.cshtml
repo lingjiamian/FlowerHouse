@@ -12,10 +12,13 @@
     @*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">*@
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/layui/css/layui.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/layui/layui.js"></script>
+    @*<link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/layui/layui.js"></script>*@
     @await RenderSectionAsync("Style", false)
+
+    <link href="~/layui/layui/css/layui.css" />
+    <script src="~/layui/layui/layui.all.js"></script>
 </head>
 
 <body>

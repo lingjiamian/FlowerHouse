@@ -335,10 +335,10 @@ namespace FlowerHouse.Controllers
         /// <param name="url">请求的url</param>
         /// <param name="phone">手机号</param>
         /// <returns></returns>
-        private async Task<IRestResponse> SendRequest(string url, string phone)
+        private async Task<RestResponse> SendRequest(string url, string phone)
         {
             var client = new RestClient(url);
-            var request = new RestRequest(Method.POST);
+            var request = new RestRequest(url, Method.Post);
             request.AddHeader("X-Bmob-Application-Id", "1b7b23055b070b5bc0badfb56165409c");
             request.AddHeader("X-Bmob-REST-API-Key", "2cfcc9e12f7d0f77b458ee2ddc018452");
             request.AddHeader("Content-Type", "application/json");
@@ -346,14 +346,15 @@ namespace FlowerHouse.Controllers
             return await client.ExecuteAsync(request);
         }
 
+        
         /// <summary>
         /// 请求手机验证码
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        private async Task<IRestResponse> RequestCodeAsync(string phone)
+        private async Task<RestResponse> RequestCodeAsync(string phone)
         {
-            IRestResponse response = await SendRequest("https://api.bmob.cn/1/requestSmsCode", phone);
+            RestResponse response = await SendRequest("https://api.bmob.cn/1/requestSmsCode", phone);
             return response;
         }
 
@@ -363,10 +364,10 @@ namespace FlowerHouse.Controllers
         /// <param name="phone">手机号</param>
         /// <param name="validate">验证码</param>
         /// <returns></returns>
-        private async Task<IRestResponse> VerifyCodeAsync(string phone, string validate)
+        private async Task<RestResponse> VerifyCodeAsync(string phone, string validate)
         {
             string url = "https://api.bmob.cn/1/verifySmsCode/" + validate;
-            IRestResponse response = await SendRequest(url, phone);
+            RestResponse response = await SendRequest(url, phone);
             return response;
         }
 
