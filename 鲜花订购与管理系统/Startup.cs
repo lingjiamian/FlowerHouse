@@ -35,14 +35,20 @@ namespace FlowerHouse
 
             .AddEntityFrameworkStores<FlowerHouseContext>().AddDefaultTokenProviders();
 
-            services.AddDbContextPool<FlowerHouseContext>(options => options.UseMySql("Data Source=localhost;Database=flowerhouse;User Id=root;Password=sin3306;port=3306;SslMode=None;",
-                new MySqlServerVersion(new Version(8, 0, 21)),
-                mysqlOptions =>
-                    mysqlOptions.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend))
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-            );
+            //services.AddDbContextPool<FlowerHouseContext>(options => options.UseMySql("Data Source=localhost;Database=flowerhouse;User Id=root;Password=sin3306;port=3306;SslMode=None;",
+            //    new MySqlServerVersion(new Version(8, 0, 21)),
+            //    mysqlOptions =>
+            //        mysqlOptions.CharSetBehavior(Pomelo.EntityFrameworkCore.MySql.Infrastructure.CharSetBehavior.NeverAppend))
+            //    .EnableSensitiveDataLogging()
+            //    .EnableDetailedErrors()
+            //);
 
+            services.AddDbContextPool<FlowerHouseContext>(options => {
+                options.UseSqlite(Configuration.GetConnectionString("sqlite"));
+                });
+
+
+            
 
             services.AddDistributedMemoryCache();
 
