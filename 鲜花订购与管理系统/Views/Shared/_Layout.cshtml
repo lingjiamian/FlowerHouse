@@ -8,17 +8,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>花之家</title>
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
-    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="~/css/site.css" rel="stylesheet" />
     <link href="~/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    @*<link href="~/layui/css/layui.css" rel="stylesheet" />
-    <script src="~/layui/layui.js"></script>*@
-    @await RenderSectionAsync("Style", false)
-
+    @*@await RenderSectionAsync("Style", false)*@
     <link href="~/layui/layui/css/layui.css" />
     <script src="~/layui/layui/layui.all.js"></script>
+    <link href="~/layui/layui/css/layui.css" />
 </head>
 
 <body>
@@ -143,6 +141,8 @@
             </footer>
         </div>
     </div>
+   
+    @RenderSection("Scripts", required: false)
     <script>
         layui.use('element', function () { });
 
@@ -168,12 +168,11 @@
             });
         });
     </script>
-    @RenderSection("Scripts", required: false)
-    <form asp-action="payment" asp-controller="Account" method="post">
+   @* <form asp-action="payment" asp-controller="Account" method="post">
         <div id="lai" style="display:none">
             <p>请输入要充值的金额:<input type="text" name="num" value="" /></p>
             <input type="submit" name="" class="layui-btn" value="确认充值" />
         </div>
-    </form>
+    </form>*@
 </body>
 </html>

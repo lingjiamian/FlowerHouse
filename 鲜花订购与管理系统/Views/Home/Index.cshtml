@@ -59,7 +59,7 @@
 </div>
 
 <script>
-    
+
     layui.use(['carousel', 'form'], function () {
         var carousel = layui.carousel
             , form = layui.form;
@@ -84,20 +84,20 @@
         };
 
         //监听开关
-        form.on('switch(autoplay)', function () {
-            ins3.reload({
-                autoplay: this.checked
-            });
-        });
+        //form.on('switch(autoplay)', function () {
+        //    ins3.reload({
+        //        autoplay: this.checked
+        //    });
+        //});
 
-        $('.demoSet').on('keyup', function () {
-            var value = this.value
-                , options = {};
-            if (!/^\d+$/.test(value)) return;
+        //$('.demoSet').on('keyup', function () {
+        //    var value = this.value
+        //        , options = {};
+        //    if (!/^\d+$/.test(value)) return;
 
-            options[this.name] = value;
-            ins3.reload(options);
-        });
+        //    options[this.name] = value;
+        //    ins3.reload(options);
+        //});
 
         //其它示例
         //$('.demoTest .layui-btn').on('click', function () {
